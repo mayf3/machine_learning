@@ -15,6 +15,7 @@ class KnnBruteForce {
   using FeatureList = std::vector<Feature>;
   using Label = int;
   using LabelList = utils::common::LabelList<Label>;
+  using FeatureListAndLabelList = utils::common::FeatureListAndLabelList<Feature, Label>;
 
   KnnBruteForce(const FeatureList& feature_list, const LabelList& label_list, int dim)
       : feature_list_(feature_list),
