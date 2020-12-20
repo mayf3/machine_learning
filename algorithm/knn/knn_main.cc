@@ -1,78 +1,37 @@
 #include <cstdio>
-#include <fstream>
 #include <iostream>
-#include <random>
 #include <unordered_map>
+#include <iomanip>
 
 #include "algorithm/knn/knn_brute_force.h"
 #include "utils/string/string_utils.h"
+#include "utils/data/data_utils.h"
 
 int main(int argc, char** argv) {
   // TODO(mayf3) Use google command line to parse argc and argv.
   if (argc < 2) {
-    printf("Hint : %s input_file", argv[0]);
+    printf("Hint : %s input_file\n", argv[0]);
     return -1;
   }
   const char* input_filename = argv[1];
 
-  std::ifstream input(input_filename);
-  std::string line;
+  knn::KnnBruteForce::FeatureListAndLabelList feature_list_and_label_list;
+  utils::data::ReadFeatureListAndLabelList(input_filename, &feature_list_and_label_list);
 
-  // TODO(mayf3) Move to a util.
-  knn::KnnBruteForce::FeatureList feature_list;
-  knn::KnnBruteForce::LabelList label_list;
+  knn::KnnBruteForce::FeatureListAndLabelList training_data;
+  knn::KnnBruteForce::FeatureListAndLabelList testing_data;
 
-  // Get feature and label
-  while (getline(input, line)) {
-    knn::KnnBruteForce::Feature feature;
-    knn::KnnBruteForce::Label label;
-    auto string_list = utils::string::Split(line);
-    assert(string_list.size() > 1);
-    for (int i = 0; i < string_list.size() - 1; i++) {
-      feature.emplace_back(std::stod(string_list[i]));
-    }
-    label = std::stoi(string_list.back());
-    if (feature_list.size()) {
-      assert(feature_list[0].size() == feature.size());
-    }
-    feature_list.emplace_back(std::move(feature));
-    label_list.emplace_back(label);
-  }
+  utils::data::SplitIntoTrainingAndTesting(feature_list_and_label_list, &training_data, &testing_data);
 
-  // Split data to training(70%) and test(30%)
-  std::vector<int> index(feature_list.size(), 0);
-  for (int i = 0; i < index.size(); i++) {
-    index[i] = i;
-  }
-  std::shuffle(index.begin(), index.end(), std::default_random_engine(20201220));
-
-  constexpr double kTrainingDataRate = 0.7;
-
-  knn::KnnBruteForce::FeatureList training_feature_list;
-  knn::KnnBruteForce::LabelList training_label_list;
-
-  const int end_of_training = static_cast<int>(feature_list.size() * kTrainingDataRate);
-  for (int i = 0; i < end_of_training; i++) {
-    training_feature_list.emplace_back(feature_list[index[i]]);
-    training_label_list.emplace_back(label_list[index[i]]);
-  }
-
-  knn::KnnBruteForce::FeatureList test_feature_list;
-  knn::KnnBruteForce::LabelList test_label_list;
-
-  for (int i = end_of_training; i < feature_list.size(); i++) {
-    test_feature_list.emplace_back(feature_list[index[i]]);
-    test_label_list.emplace_back(label_list[index[i]]);
-  }
-
-  knn::KnnBruteForce knn_brute_force(training_feature_list, training_label_list,
-                                     training_feature_list[0].size());
+  assert(training_data.feature_list.size() > 0);
+  knn::KnnBruteForce knn_brute_force(training_data.feature_list, training_data.label_list,
+                                     training_data.feature_list[0].size());
 
   constexpr int kParameterOfKnn = 20;
   int correct_times = 0;
-  for (int i = 0; i < test_feature_list.size(); i++) {
+  for (int i = 0; i < testing_data.feature_list.size(); i++) {
     knn::KnnBruteForce::LabelList k_labels;
-    knn_brute_force.Search(test_feature_list[i], kParameterOfKnn, &k_labels, nullptr);
+    knn_brute_force.Search(testing_data.feature_list[i], kParameterOfKnn, &k_labels, nullptr);
     std::unordered_map<int, int> label_count;
     for (const auto& label : k_labels) {
       label_count[label]++;
@@ -85,12 +44,12 @@ int main(int argc, char** argv) {
         label_of_max_times = pair.first;
       }
     }
-    if (label_of_max_times == test_label_list[i]) {
+    if (label_of_max_times == testing_data.label_list[i]) {
       correct_times++;
     }
   }
   std::cout << " Correct Rate: " << std::fixed << std::setprecision(2)
-            << static_cast<double>(correct_times) / test_feature_list.size() * 100.0 << " % ("
-            << correct_times << "/" << test_feature_list.size() << ")" << std::endl;
+            << static_cast<double>(correct_times) / testing_data.feature_list.size() * 100.0 << " % ("
+            << correct_times << "/" << testing_data.feature_list.size() << ")" << std::endl;
   return 0;
 }
