@@ -16,5 +16,11 @@ using FeatureList = std::vector<Feature>;
 template <typename Label>
 using LabelList = std::vector<Label>;
 
+template <typename Feature, typename Label>
+struct FeatureListAndLabelList {
+  FeatureList<Feature> feature_list;
+  LabelList<Label> label_list;
+};
+
 }  // namespace common
 }  // namespace utils
