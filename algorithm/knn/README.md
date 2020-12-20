@@ -1,5 +1,5 @@
 ## How To Build :
-bazel run //algorithm/knn:knn_main
+bazel build //algorithm/knn:knn_main
 
 ## How To Use:
 ```
