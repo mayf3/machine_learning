@@ -5,32 +5,7 @@
 #include <unordered_map>
 
 #include "algorithm/knn/knn_brute_force.h"
-
-constexpr char kDelimeter = ',';
-constexpr double kEpsilon = 1e-6;
-
-template <class OutStream>
-void Split(const std::string& s, char delimeter, int delimeter_length, bool allow_empty,
-           OutStream out) {
-  assert(delimeter_length > 0);
-  int start_pos = 0;
-  int end_pos = 0;
-  while (start_pos < s.length() && (end_pos = s.find(delimeter, start_pos)) != std::string::npos) {
-    if (allow_empty || start_pos != end_pos) {
-      *out = s.substr(start_pos, end_pos - start_pos);
-    }
-    start_pos = end_pos + delimeter_length;
-  }
-  if (allow_empty || start_pos != s.length()) {
-    *out = s.substr(start_pos);
-  }
-}
-
-std::vector<std::string> Split(const std::string& s, char delimiter, bool allow_empty) {
-  std::vector<std::string> tokens;
-  Split(s, delimiter, 1, allow_empty, std::back_inserter(tokens));
-  return tokens;
-}
+#include "utils/string/string_utils.h"
 
 int main(int argc, char** argv) {
   // TODO(mayf3) Use google command line to parse argc and argv.
@@ -51,7 +26,7 @@ int main(int argc, char** argv) {
   while (getline(input, line)) {
     knn::KnnBruteForce::Feature feature;
     knn::KnnBruteForce::Label label;
-    auto string_list = Split(line, kDelimeter, true);
+    auto string_list = utils::string::Split(line);
     assert(string_list.size() > 1);
     for (int i = 0; i < string_list.size() - 1; i++) {
       feature.emplace_back(std::stod(string_list[i]));
