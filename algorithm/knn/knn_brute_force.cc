@@ -1,14 +1,15 @@
 // Copyright @2020 mayf3
 
-#include "knn_brute_force.h"
+#include "algorithm/knn/knn_brute_force.h"
+
+#include "utils/math/math_utils.h"
 
 namespace knn {
 
 namespace {
 
 using Feature = KnnBruteForce::Feature;
-
-inline double Sqr(const double s) { return s * s; }
+using utils::math::Sqr;
 
 double SqrDistance(const Feature& a, const Feature& b) {
   double sqr_distance = 0;

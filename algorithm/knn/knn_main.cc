@@ -4,7 +4,7 @@
 #include <random>
 #include <unordered_map>
 
-#include "knn_brute_force.h"
+#include "algorithm/knn/knn_brute_force.h"
 
 constexpr char kDelimeter = ',';
 constexpr double kEpsilon = 1e-6;
@@ -63,43 +63,6 @@ int main(int argc, char** argv) {
     feature_list.emplace_back(std::move(feature));
     label_list.emplace_back(label);
   }
-
-  // Normalize Data : value = (value - min_value) / (max_value - min_value)
-  /*
-  for (int feature_index = 0; feature_index < feature_list[0].size(); feature_index++) {
-    double min_value = feature_list[0][feature_index];
-    double max_value = feature_list[0][feature_index];
-    for (int i = 0; i < feature_list.size(); i++) {
-      min_value = std::min(min_value, feature_list[i][feature_index]);
-      max_value = std::max(max_value, feature_list[i][feature_index]);
-    }
-    if (max_value - min_value > kEpsilon) {
-      for (int i = 0; i < feature_list.size(); i++) {
-        feature_list[i][feature_index] =
-            (feature_list[i][feature_index] - min_value) / (max_value - min_value);
-      }
-    }
-  }
-  */
-
-  // Normalize Data : value = (value - mean) / variance
-  /*
-  for (int feature_index = 0; feature_index < feature_list[0].size(); feature_index++) {
-    double sum = 0;
-    double sqr_sum = 0;
-    for (int i = 0; i < feature_list.size(); i++) {
-      sum += feature_list[i][feature_index];
-      sqr_sum += feature_list[i][feature_index] * feature_list[i][feature_index];
-    }
-    const double mean = sum / feature_list.size();
-    const double variance = std::sqrt(sqr_sum - sum * mean);
-    if (variance > kEpsilon) {
-      for (int i = 0; i < feature_list.size(); i++) {
-        feature_list[i][feature_index] = (feature_list[i][feature_index] - mean) / variance;
-      }
-    }
-  }
-  */
 
   // Split data to training(70%) and test(30%)
   std::vector<int> index(feature_list.size(), 0);
