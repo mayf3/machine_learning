@@ -13,12 +13,15 @@ define.o:
 math_utils.o : define.o
 	$(CPP) $(FLAGS) -c utils/math/math_utils.cc define.o
 
+string_utils.o :
+	$(CPP) $(FLAGS) -c utils/string/string_utils.cc
+
 clean_utils:
-	$(RM) -f define.o math_utils.o
+	$(RM) -f define.o math_utils.o string_utils.o
 
 # -------------------- Knn --------------------
-knn: knn_main.o knn_brute_force.o
-	$(CPP) $(FLAGS) -o knn knn_main.o knn_brute_force.o
+knn: knn_main.o knn_brute_force.o string_utils.o 
+	$(CPP) $(FLAGS) -o knn knn_main.o knn_brute_force.o string_utils.o 
 
 knn_main.o : knn_brute_force.o
 	$(CPP) $(FLAGS) -c algorithm/knn/knn_main.cc knn_brute_force.o

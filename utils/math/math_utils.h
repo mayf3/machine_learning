@@ -9,6 +9,8 @@
 namespace utils {
 namespace math {
 
+constexpr double kEpsilon = 1e-6;
+
 template <typename T>
 constexpr T Sqr(T x) {
   return x * x;
