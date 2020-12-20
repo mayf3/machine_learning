@@ -5,14 +5,16 @@
 #include <algorithm>
 #include <vector>
 
+#include "utils/common/define.h"
+
 namespace knn {
 
 class KnnBruteForce {
  public:
-  using Feature = std::vector<double>;
+  using Feature = utils::common::Feature<double>;
   using FeatureList = std::vector<Feature>;
   using Label = int;
-  using LabelList = std::vector<Label>;
+  using LabelList = utils::common::LabelList<Label>;
 
   KnnBruteForce(const FeatureList& feature_list, const LabelList& label_list, int dim)
       : feature_list_(feature_list),
