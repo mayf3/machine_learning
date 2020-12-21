@@ -10,8 +10,6 @@ namespace data {
 
 class MnistDataParser {
  public:
-  static constexpr int kRow = 28;
-  static constexpr int kCol = 28;
   using Matrix = std::vector<std::vector<uint8_t>>;
 
   MnistDataParser(const char* training_image_file, const char* training_label_file,

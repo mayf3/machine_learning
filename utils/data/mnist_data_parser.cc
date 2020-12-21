@@ -32,6 +32,8 @@ MnistDataParser::MnistDataParser(const char* training_image_file, const char* tr
 }
 
 void MnistDataParser::ParseImage(const char* filename, std::vector<Matrix>* image) {
+  constexpr int kRow = 28;
+  constexpr int kCol = 28;
   std::fstream input(filename, std::ios::in | std::ios::binary);
   assert(input.is_open());
   std::vector<unsigned char> buffer(std::istreambuf_iterator<char>(input), {});
@@ -39,8 +41,8 @@ void MnistDataParser::ParseImage(const char* filename, std::vector<Matrix>* imag
   const int number = GetInt32ByIndex(buffer, 4);
   const int row = GetInt32ByIndex(buffer, 8);
   const int col = GetInt32ByIndex(buffer, 12);
-  assert(row == 28);
-  assert(col == 28);
+  assert(row == kRow);
+  assert(col == kCol);
   assert(16 + number * row * col == buffer.size());
   for (int i = 0; i < number; i++) {
     Matrix matrix;
