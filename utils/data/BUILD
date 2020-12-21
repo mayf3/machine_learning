@@ -8,3 +8,10 @@ cc_library(
         "//utils/string:string_utils",
     ],
 )
+
+
+cc_library(
+    name = "mnist_data_parser",
+    srcs = ["mnist_data_parser.cc"],
+    hdrs = ["mnist_data_parser.h"],
+)

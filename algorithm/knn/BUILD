@@ -18,3 +18,16 @@ cc_binary(
         "//utils/data:data_utils",
     ],
 )
+
+cc_binary(
+    name = "knn_with_mnist_main",
+    srcs = ["knn_with_mnist_main.cc"],
+    data = [
+        "//data/multi_class_classification/mnist:mnist",
+    ],
+    deps = [
+        ":knn_brute_force",
+        "//utils/data:data_utils",
+        "//utils/data:mnist_data_parser",
+    ],
+)
