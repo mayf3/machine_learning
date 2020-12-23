@@ -51,6 +51,7 @@ cc_binary(
     deps = [
         ":knn_brute_force",
         ":knn_fast",
+        "//utils/time:stop_watch",
         "//utils/data:data_utils",
         "//utils/data:mnist_data_parser",
     ],
