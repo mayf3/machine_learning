@@ -2,12 +2,15 @@
 #include <iostream>
 #include <unordered_map>
 #include <iomanip>
+#include <memory>
+#include <utility>
 
 #include "algorithm/knn/knn_brute_force.h"
 #include "algorithm/knn/knn_fast.h"
 #include "utils/string/string_utils.h"
 #include "utils/data/data_utils.h"
 #include "utils/data/mnist_data_parser.h"
+#include "utils/time/stop_watch.h"
 
 algorithm::knn::KnnInterface::FeatureList Parse(const std::vector<utils::data::MnistDataParser::Matrix>& image) {
   algorithm::knn::KnnInterface::FeatureList feature_list;
@@ -48,6 +51,7 @@ int main(int argc, char** argv) {
 
   constexpr int kParameterOfKnn = 20;
   int correct_times = 0;
+  std::unique_ptr<utils::time::StopWatch> stop_watch(new utils::time::StopWatch("mnist"));
   for (int i = 0; i < testing_data.feature_list.size(); i++) {
     algorithm::knn::KnnInterface::LabelList k_labels;
     knn_instance.Search(testing_data.feature_list[i], kParameterOfKnn, &k_labels, nullptr);
@@ -66,11 +70,12 @@ int main(int argc, char** argv) {
     if (label_of_max_times == testing_data.label_list[i]) {
       correct_times++;
     }
-    if (i % 100 == 0) {
+    if (i % 10 == 0) {
       std::cout << i << " "
             << " Correct Rate: " << std::fixed << std::setprecision(2)
-            << static_cast<double>(correct_times) / i * 100.0 << " % ("
-            << correct_times << "/" << i << ")" << std::endl;
+            << static_cast<double>(correct_times) / (i + 1) * 100.0 << " % ("
+            << correct_times << "/" << (i + 1) << ")" << std::endl;
+      stop_watch.reset(new utils::time::StopWatch("mnist"));
     }
   }
   std::cout << " Correct Rate: " << std::fixed << std::setprecision(2)
