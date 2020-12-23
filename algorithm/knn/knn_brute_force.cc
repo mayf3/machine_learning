@@ -2,36 +2,18 @@
 
 #include "algorithm/knn/knn_brute_force.h"
 
-#include "utils/math/math_utils.h"
-
+namespace algorithm {
 namespace knn {
 
 namespace {
 
-using Feature = KnnBruteForce::Feature;
-using utils::math::Sqr;
-
-double SqrDistance(const Feature& a, const Feature& b) {
-  double sqr_distance = 0;
-  for (int i = 0; i < a.size(); i++) {
-    sqr_distance += Sqr(a[i] - b[i]);
-  }
-  return sqr_distance;
-}
+using Feature = KnnInterface::Feature;
+using IndexAndSqrDistance = KnnInterface::IndexAndSqrDistance;
 
 }  // namespace
 
 int KnnBruteForce::Search(const Feature& feature, int k, LabelList* k_labels,
                           std::vector<double>* k_sqr_distances) const {
-  struct IndexAndSqrDistance {
-    int index = -1;
-    double sqr_distance = 0.0;
-    IndexAndSqrDistance(int index, double sqr_distance)
-        : index(index), sqr_distance(sqr_distance) {}
-    bool operator<(const IndexAndSqrDistance& other) const {
-      return this->sqr_distance < other.sqr_distance;
-    }
-  };
   assert(k > 0);
   assert(k_labels != nullptr);
   assert(point_dim_ == feature.size());
@@ -62,3 +44,4 @@ int KnnBruteForce::Search(const Feature& feature, int k, LabelList* k_labels,
 }
 
 }  // namespace knn
+}  // namespace algorithm
