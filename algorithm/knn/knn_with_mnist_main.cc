@@ -4,14 +4,15 @@
 #include <iomanip>
 
 #include "algorithm/knn/knn_brute_force.h"
+#include "algorithm/knn/knn_fast.h"
 #include "utils/string/string_utils.h"
 #include "utils/data/data_utils.h"
 #include "utils/data/mnist_data_parser.h"
 
-knn::KnnBruteForce::FeatureList Parse(const std::vector<utils::data::MnistDataParser::Matrix>& image) {
-  knn::KnnBruteForce::FeatureList feature_list;
+algorithm::knn::KnnInterface::FeatureList Parse(const std::vector<utils::data::MnistDataParser::Matrix>& image) {
+  algorithm::knn::KnnInterface::FeatureList feature_list;
   for (auto matrix : image) {
-    knn::KnnBruteForce::Feature feature;
+    algorithm::knn::KnnInterface::Feature feature;
     feature.reserve(matrix.size() * matrix[0].size());
     for (int i = 0; i < matrix.size(); i++) {
       for (int j = 0; j < matrix[i].size(); j++) {
@@ -30,24 +31,26 @@ int main(int argc, char** argv) {
       "./data/multi_class_classification/mnist/t10k-images-idx3-ubyte",
       "./data/multi_class_classification/mnist/t10k-labels-idx1-ubyte");
 
-  knn::KnnBruteForce::FeatureListAndLabelList training_data;
+  algorithm::knn::KnnInterface::FeatureListAndLabelList training_data;
   training_data.feature_list = Parse(parser.training_image());
   training_data.label_list = parser.training_label();
 
-  knn::KnnBruteForce::FeatureListAndLabelList testing_data;
+  algorithm::knn::KnnInterface::FeatureListAndLabelList testing_data;
   testing_data.feature_list = Parse(parser.testing_image());
   testing_data.label_list = parser.testing_label();
 
   assert(training_data.feature_list.size() > 0);
 
-  knn::KnnBruteForce knn_brute_force(training_data.feature_list, training_data.label_list,
-                                     training_data.feature_list[0].size());
+  // algorithm::knn::KnnBruteForce knn_instance(
+  //     training_data.feature_list, training_data.label_list, training_data.feature_list[0].size());
+  algorithm::knn::KnnFast knn_instance(
+      training_data.feature_list, training_data.label_list, training_data.feature_list[0].size());
 
   constexpr int kParameterOfKnn = 20;
   int correct_times = 0;
   for (int i = 0; i < testing_data.feature_list.size(); i++) {
-    knn::KnnBruteForce::LabelList k_labels;
-    knn_brute_force.Search(testing_data.feature_list[i], kParameterOfKnn, &k_labels, nullptr);
+    algorithm::knn::KnnInterface::LabelList k_labels;
+    knn_instance.Search(testing_data.feature_list[i], kParameterOfKnn, &k_labels, nullptr);
     std::unordered_map<int, int> label_count;
     for (const auto& label : k_labels) {
       label_count[label]++;
