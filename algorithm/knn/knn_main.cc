@@ -6,6 +6,7 @@
 #include "algorithm/knn/knn_brute_force.h"
 #include "algorithm/knn/knn_fast.h"
 #include "utils/data/data_utils.h"
+#include "utils/math/math_utils.h"
 #include "utils/string/string_utils.h"
 
 int main(int argc, char** argv) {
@@ -18,6 +19,9 @@ int main(int argc, char** argv) {
 
   algorithm::knn::KnnInterface::FeatureListAndLabelList feature_list_and_label_list;
   utils::data::ReadFeatureListAndLabelList(input_filename, &feature_list_and_label_list);
+
+  // utils::math::NormalizeByMinMax(&feature_list_and_label_list.feature_list);
+  utils::math::NormalizeByMeanAndVariance(&feature_list_and_label_list.feature_list);
 
   algorithm::knn::KnnInterface::FeatureListAndLabelList training_data;
   algorithm::knn::KnnInterface::FeatureListAndLabelList testing_data;
