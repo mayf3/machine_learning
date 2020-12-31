@@ -22,8 +22,8 @@ void NormalizeByMinMax(T* feature_list) {
   assert(feature_list != nullptr);
   assert(feature_list->size() > 0);
   for (int feature_index = 0; feature_index < (*feature_list)[0].size(); feature_index++) {
-    T min_value = (*feature_list)[0][feature_index];
-    T max_value = (*feature_list)[0][feature_index];
+    auto min_value = (*feature_list)[0][feature_index];
+    auto max_value = (*feature_list)[0][feature_index];
     for (int i = 0; i < feature_list->size(); i++) {
       min_value = std::min(min_value, (*feature_list)[i][feature_index]);
       max_value = std::max(max_value, (*feature_list)[i][feature_index]);
@@ -42,17 +42,16 @@ void NormalizeByMeanAndVariance(T* feature_list) {
   assert(feature_list != nullptr);
   assert(feature_list->size() > 0);
   for (int feature_index = 0; feature_index < (*feature_list)[0].size(); feature_index++) {
-    T sum = 0;
-    T sqr_sum = 0;
+    auto sum = 0;
+    auto sqr_sum = 0;
     for (int i = 0; i < feature_list->size(); i++) {
       sum += (*feature_list)[i][feature_index];
       sqr_sum += Sqr((*feature_list)[i][feature_index]);
     }
-    const T mean = sum / feature_list->size();
-    const T variance = std::sqrt(sqr_sum - sum * mean);
-    assert(variance != T::value_type());
+    const auto mean = sum / feature_list->size();
+    const auto std_variance = std::sqrt((sqr_sum - sum * mean) / feature_list->size());
     for (int i = 0; i < feature_list->size(); i++) {
-      (*feature_list)[i][feature_index] = ((*feature_list)[i][feature_index] - mean) / variance;
+      (*feature_list)[i][feature_index] = ((*feature_list)[i][feature_index] - mean) / std_variance;
     }
   }
 }

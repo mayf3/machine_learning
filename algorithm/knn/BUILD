@@ -39,6 +39,7 @@ cc_binary(
         ":knn_brute_force",
         ":knn_fast",
         "//utils/data:data_utils",
+        "//utils/math:math_utils",
     ],
 )
 
