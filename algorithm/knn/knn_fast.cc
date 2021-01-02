@@ -9,13 +9,13 @@ namespace knn {
 
 namespace {
 
-using Feature = KnnInterface::Feature;
+using NormalFeature = KnnInterface::NormalFeature;
 using IndexAndSqrDistance = KnnInterface::IndexAndSqrDistance;
 using KnnHeap = KnnFast::KnnHeap;
 
 }  // namespace
 
-KnnFast::KnnFast(const FeatureList& feature_list, const LabelList& label_list, int dim)
+KnnFast::KnnFast(const NormalFeatureList& feature_list, const NormalLabelList& label_list, int dim)
     : KnnInterface(feature_list, label_list, dim) {
   index_.reserve(point_size_);
   for (int i = 0; i < point_size_; i++) {
@@ -37,7 +37,7 @@ void KnnFast::Build(int left, int right, int dim) {
   Build(mid + 1, right, next_dim);
 }
 
-void KnnFast::SearchInternal(const Feature& feature, int left, int right, int dim, int k,
+void KnnFast::SearchInternal(const NormalFeature& feature, int left, int right, int dim, int k,
                              KnnHeap* heap) const {
   if (right - left < 1) {
     return;
@@ -60,7 +60,7 @@ void KnnFast::SearchInternal(const Feature& feature, int left, int right, int di
   }
 }
 
-int KnnFast::Search(const Feature& feature, int k, LabelList* k_labels,
+int KnnFast::Search(const NormalFeature& feature, int k, NormalLabelList* k_labels,
                     std::vector<double>* k_sqr_distances) const {
   assert(k > 0);
   assert(k_labels != nullptr);
