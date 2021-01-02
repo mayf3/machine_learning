@@ -5,7 +5,7 @@ cc_library(
     srcs = ["knn_interface.cc"],
     hdrs = ["knn_interface.h"],
     deps = [
-        "//utils/common:define",
+        "//algorithm/learner:learner_base",
         "//utils/math:math_utils",
     ],
 )
@@ -16,7 +16,6 @@ cc_library(
     hdrs = ["knn_brute_force.h"],
     deps = [
         ":knn_interface",
-        "//utils/common:define",
         "//utils/math:math_utils",
     ],
 )
@@ -27,7 +26,6 @@ cc_library(
     hdrs = ["knn_fast.h"],
     deps = [
         ":knn_interface",
-        "//utils/common:define",
         "//utils/math:math_utils",
     ],
 )

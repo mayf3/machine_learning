@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include <iostream>
 #include <string>
 #include <vector>
 
@@ -16,7 +17,8 @@ std::vector<std::string> Split(const std::string& s, char delimiter, bool allow_
 
 template<typename T>
 T StringToValue(const std::string& str) {
-  assert(false) << " Do not implement. ";
+  std::cout << " Do not implement. " << std::endl;
+  assert(false);
 }
 
 template<>

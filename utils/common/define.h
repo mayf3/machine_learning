@@ -7,6 +7,7 @@
 namespace utils {
 namespace common {
 
+// TODO(mayf3) Move the defination to learner_base
 template <typename T>
 using Feature = std::vector<T>;
 
