@@ -6,19 +6,20 @@
 #include <vector>
 
 #include "algorithm/knn/knn_interface.h"
-#include "utils/common/define.h"
 
 namespace algorithm {
 namespace knn {
 
 class KnnBruteForce : public KnnInterface {
  public:
-  KnnBruteForce(const FeatureList& feature_list, const LabelList& label_list, int dim)
+  KnnBruteForce(const NormalFeatureList& feature_list, const NormalLabelList& label_list, int dim)
       : KnnInterface(feature_list, label_list, dim) {}
 
   ~KnnBruteForce() = default;
 
-  int Search(const Feature& feature, int k, LabelList* k_indices,
+  const std::string Name() const override { return "KnnBruteForce"; }
+
+  int Search(const NormalFeature& feature, int k, NormalLabelList* k_indices,
              std::vector<double>* k_sqr_distances) const override;
 };
 
