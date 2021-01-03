@@ -46,6 +46,7 @@ PerceptronDual::PerceptronDual(const NormalFeatureList& feature_list,
     if (all_correct) {
       break;
     }
+    num_iteration_++;
   }
 }
 

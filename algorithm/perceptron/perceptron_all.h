@@ -10,12 +10,12 @@
 namespace algorithm {
 namespace perceptron {
 
-class Perceptron : public learner::LearnerBase {
+class PerceptronAll : public learner::LearnerBase {
  public:
-  Perceptron(const NormalFeatureList& feature_list, const NormalLabelList& label_list, int dim,
+  PerceptronAll(const NormalFeatureList& feature_list, const NormalLabelList& label_list, int dim,
              double learning_rate = kLearningRate);
 
-  const std::string Name() const override { return "Perceptron"; }
+  const std::string Name() const override { return "PerceptronAll"; }
 
   NormalLabel Predict(const NormalFeature& feature) const override;
 
