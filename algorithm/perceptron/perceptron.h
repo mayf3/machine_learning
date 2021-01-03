@@ -19,12 +19,15 @@ class Perceptron : public learner::LearnerBase {
 
   NormalLabel Predict(const NormalFeature& feature) const override;
 
+  int num_iteration() const { return num_iteration_; }
+
  private:
   const int dim_;
   const double learning_rate_;
   static constexpr double kLearningRate = 1.0;
   std::vector<double> weight_;
   double bias_ = 0.0;
+  int num_iteration_ = 0;
 };
 
 }  // namespace perceptron

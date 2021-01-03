@@ -36,6 +36,7 @@ Perceptron::Perceptron(const NormalFeatureList& feature_list, const NormalLabelL
     if (all_correct) {
       break;
     }
+    num_iteration_++;
   }
 }
 

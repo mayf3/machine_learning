@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "algorithm/learner/learner_base.h"
+
 namespace algorithm {
 namespace perceptron {
 
@@ -17,6 +19,10 @@ int PerceptronSign(double x);
 int InternalTypeToNormalType(int internal_type);
 
 int NormalTypeToInternalType(int normal_type);
+
+void GenerateDataForPerceptron(int size, int dim,
+                               learner::LearnerBase::NormalFeatureList* feature_list,
+                               learner::LearnerBase::NormalLabelList* label_list);
 
 }  // namespace perceptron
 }  // namespace algorithm
