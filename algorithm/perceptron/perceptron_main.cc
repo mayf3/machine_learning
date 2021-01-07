@@ -1,3 +1,4 @@
+// Copyright @2021 mayf3
 
 #include "algorithm/perceptron/perceptron.h"
 #include "algorithm/perceptron/perceptron_all.h"
