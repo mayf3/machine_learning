@@ -2,10 +2,13 @@
 
 #include "algorithm/knn/knn_fast.h"
 
+#include "algorithm/learner/learner_factory.h"
 #include "utils/math/math_utils.h"
 
 namespace algorithm {
 namespace knn {
+
+REGISTER_LEARNER(KnnFast, kKnnFastName);
 
 namespace {
 
@@ -15,8 +18,8 @@ using KnnHeap = KnnFast::KnnHeap;
 
 }  // namespace
 
-KnnFast::KnnFast(const NormalFeatureList& feature_list, const NormalLabelList& label_list, int dim)
-    : KnnInterface(feature_list, label_list, dim) {
+KnnFast::KnnFast(const learner::LearnerOptions& options)
+    : KnnInterface(options) {
   index_.reserve(point_size_);
   for (int i = 0; i < point_size_; i++) {
     index_.emplace_back(i);

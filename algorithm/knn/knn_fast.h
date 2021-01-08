@@ -7,6 +7,7 @@
 #include <vector>
 
 #include "algorithm/knn/knn_interface.h"
+#include "algorithm/learner/learner_name.h"
 
 namespace algorithm {
 namespace knn {
@@ -14,11 +15,11 @@ namespace knn {
 class KnnFast : public KnnInterface {
  public:
   using KnnHeap = std::priority_queue<IndexAndSqrDistance>;
-  KnnFast(const NormalFeatureList& feature_list, const NormalLabelList& label_list, int dim);
+  KnnFast(const learner::LearnerOptions& options);
 
   ~KnnFast() = default;
 
-  const std::string Name() const override { return "KnnFast"; }
+  const std::string Name() const override { return kKnnFastName; }
 
   int Search(const NormalFeature& feature, int k, NormalLabelList* k_indices,
              std::vector<double>* k_sqr_distances) const override;
