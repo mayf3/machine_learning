@@ -5,3 +5,8 @@
 // Knn
 constexpr char kKnnBruteForceName[] = "KnnBruteForce";
 constexpr char kKnnFastName[] = "KnnFast";
+
+// Perceptron
+constexpr char kPerceptronName[] = "Perceptron";
+constexpr char kPerceptronAllName[] = "PerceptronAll";
+constexpr char kPerceptronDualName[] = "PerceptronDual";

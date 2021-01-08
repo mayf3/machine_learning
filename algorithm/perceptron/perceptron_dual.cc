@@ -2,38 +2,39 @@
 
 #include "algorithm/perceptron/perceptron_dual.h"
 
+#include "algorithm/learner/learner_factory.h"
 #include "algorithm/perceptron/utils.h"
 #include "utils/math/math_utils.h"
 
 namespace algorithm {
 namespace perceptron {
 
-constexpr double PerceptronDual::kLearningRate;
+REGISTER_LEARNER(PerceptronDual, kPerceptronDualName);
 
-PerceptronDual::PerceptronDual(const NormalFeatureList& feature_list,
-                               const NormalLabelList& label_list, int dim, double learning_rate)
-    : learner::LearnerBase(), dim_(dim), learning_rate_(learning_rate) {
-  alpha_.resize(feature_list.size());
+PerceptronDual::PerceptronDual(const learner::LearnerOptions& options)
+    : num_dim_(options.num_dim), learning_rate_(options.learning_rate) {
+  alpha_.resize(options.normal_feature_list.size());
 
   // Compute gram_matrix;
   std::vector<std::vector<double>> gram_matrix;
-  gram_matrix.resize(feature_list.size());
-  for (int i = 0; i < feature_list.size(); i++) {
-    gram_matrix[i].resize(feature_list.size());
-    for (int j = 0; j < feature_list.size(); j++) {
-      for (int k = 0; k < dim_; k++) {
-        gram_matrix[i][j] += feature_list[i][k] * feature_list[j][k];
+  gram_matrix.resize(options.normal_feature_list.size());
+  for (int i = 0; i < options.normal_feature_list.size(); i++) {
+    gram_matrix[i].resize(options.normal_feature_list.size());
+    for (int j = 0; j < options.normal_feature_list.size(); j++) {
+      for (int k = 0; k < num_dim_; k++) {
+        gram_matrix[i][j] += options.normal_feature_list[i][k] * options.normal_feature_list[j][k];
       }
     }
   }
 
   while (true) {
     bool all_correct = true;
-    for (int i = 0; i < feature_list.size(); i++) {
-      const int internal_type = NormalTypeToInternalType(label_list[i]);
+    for (int i = 0; i < options.normal_feature_list.size(); i++) {
+      const int internal_type = NormalTypeToInternalType(options.normal_label_list[i]);
       double value = beta_;
-      for (int j = 0; j < feature_list.size(); j++) {
-        value += alpha_[j] * NormalTypeToInternalType(label_list[j]) * gram_matrix[j][i];
+      for (int j = 0; j < options.normal_feature_list.size(); j++) {
+        value +=
+            alpha_[j] * NormalTypeToInternalType(options.normal_label_list[j]) * gram_matrix[j][i];
       }
       if (value * internal_type > utils::math::kEpsilon) {
         continue;
@@ -52,7 +53,7 @@ PerceptronDual::PerceptronDual(const NormalFeatureList& feature_list,
 
 PerceptronDual::NormalLabel PerceptronDual::Predict(const NormalFeature& feature) const {
   double value = beta_;
-  for (int i = 0; i < dim_; i++) {
+  for (int i = 0; i < num_dim_; i++) {
     value += alpha_[i] * feature[i];
   }
   return InternalTypeToNormalType(PerceptronSign(value));
