@@ -2,19 +2,24 @@
 
 #include "algorithm/naive_bayes/bayes_estimation.h"
 
+#include "algorithm/learner/learner_factory.h"
 #include "utils/math/math_utils.h"
 
 namespace algorithm {
 namespace naive_bayes {
 
-constexpr double BayesEstimation::kLamda;
+REGISTER_LEARNER(BayesEstimation, kBayesEstimationName);
 
-BayesEstimation::BayesEstimation(const NormalFeatureList& feature_list,
-                                 const NormalLabelList& label_list, int num_dim, int num_class, double lamda)
-    : learner::LearnerBase(), num_dim_(num_dim), num_class_(num_class), num_data_(feature_list.size()), lamda_(lamda) {
+BayesEstimation::BayesEstimation(const learner::LearnerOptions& options)
+    : num_dim_(options.num_dim),
+      num_class_(options.num_class),
+      num_data_(options.normal_feature_list.size()),
+      lamda_(options.baye_estimation_lamda) {
   condition_frequency_.resize(num_dim_);
   condition_probability_.resize(num_dim_);
   different_keys_.resize(num_dim_);
+  const auto& feature_list = options.normal_feature_list;
+  const auto& label_list = options.normal_label_list;
   for (int i = 0; i < feature_list.size(); i++) {
     type_frequency_[label_list[i]]++;
     for (int j = 0; j < feature_list[i].size(); j++) {
@@ -24,13 +29,15 @@ BayesEstimation::BayesEstimation(const NormalFeatureList& feature_list,
   }
 
   for (const auto& pair : type_frequency_) {
-    type_probability_[pair.first] = (static_cast<double>(pair.second) + lamda_) / (feature_list.size() + num_class_ * lamda_);
+    type_probability_[pair.first] =
+        (static_cast<double>(pair.second) + lamda_) / (feature_list.size() + num_class_ * lamda_);
   }
 
   for (int i = 0; i < num_dim_; i++) {
     for (const auto& pair : condition_frequency_[i]) {
       condition_probability_[i][pair.first] =
-          (static_cast<double>(pair.second) + lamda_) / (type_frequency_.at(pair.first.second) + different_keys_[i].size() * lamda_);
+          (static_cast<double>(pair.second) + lamda_) /
+          (type_frequency_.at(pair.first.second) + different_keys_[i].size() * lamda_);
     }
   }
 }
@@ -47,7 +54,6 @@ BayesEstimation::NormalLabel BayesEstimation::Predict(const NormalFeature& featu
         possible *= lamda_ / (type_frequency_.at(i) + different_keys_.at(j).size() * lamda_);
       }
     }
-      std::cout << std::fixed << i << " " << possible << std::endl;
     if (possible - max_possible > utils::math::kEpsilon) {
       max_possible = possible;
       result = i;
