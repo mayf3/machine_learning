@@ -21,6 +21,12 @@ class LearnerFactory {
 
   std::unique_ptr<LearnerBase> Create(const std::string& name, const LearnerOptions& options) const;
 
+  template <typename LearnerType>
+  std::unique_ptr<LearnerType> SpecialCreate(const std::string& name,
+                                             const LearnerOptions& options) const {
+    return std::unique_ptr<LearnerType>(dynamic_cast<LearnerType*>(Create(name, options).release()));
+  }
+
   ~LearnerFactory() = default;
 
  private:
