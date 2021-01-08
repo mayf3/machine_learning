@@ -14,6 +14,8 @@ struct LearnerOptions {
   int num_dim = 0;
   // Class of label
   int num_class = 0;
+  // Learning rate
+  double learning_rate = 0.0;
 };
 
 }  // namespace learner

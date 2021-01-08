@@ -13,8 +13,7 @@ namespace knn {
 
 class KnnBruteForce : public KnnInterface {
  public:
-  KnnBruteForce(const learner::LearnerOptions& options) 
-      : KnnInterface(options) {}
+  KnnBruteForce(const learner::LearnerOptions& options) : KnnInterface(options) {}
 
   ~KnnBruteForce() = default;
 
