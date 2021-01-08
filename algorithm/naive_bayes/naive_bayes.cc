@@ -2,14 +2,20 @@
 
 #include "algorithm/naive_bayes/naive_bayes.h"
 
+#include "algorithm/learner/learner_factory.h"
 #include "utils/math/math_utils.h"
 
 namespace algorithm {
 namespace naive_bayes {
 
-NaiveBayes::NaiveBayes(const NormalFeatureList& feature_list, const NormalLabelList& label_list,
-                       int num_dim, int num_class)
-    : learner::LearnerBase(), num_dim_(num_dim), num_class_(num_class), num_data_(feature_list.size()) {
+REGISTER_LEARNER(NaiveBayes, kNaiveBayesName);
+
+NaiveBayes::NaiveBayes(const learner::LearnerOptions& options)
+    : num_dim_(options.num_dim),
+      num_class_(options.num_class),
+      num_data_(options.normal_feature_list.size()) {
+  const auto& feature_list = options.normal_feature_list;
+  const auto& label_list = options.normal_label_list;
   condition_frequency_.resize(num_dim_);
   condition_probability_.resize(num_dim_);
   for (int i = 0; i < feature_list.size(); i++) {
@@ -25,7 +31,8 @@ NaiveBayes::NaiveBayes(const NormalFeatureList& feature_list, const NormalLabelL
 
   for (int i = 0; i < num_dim_; i++) {
     for (const auto& pair : condition_frequency_[i]) {
-      condition_probability_[i][pair.first] = static_cast<double>(pair.second) / type_frequency_.at(pair.first.second);
+      condition_probability_[i][pair.first] =
+          static_cast<double>(pair.second) / type_frequency_.at(pair.first.second);
     }
   }
 }

@@ -8,6 +8,8 @@
 #include <vector>
 
 #include "algorithm/learner/learner_base.h"
+#include "algorithm/learner/learner_name.h"
+#include "algorithm/learner/learner_options.h"
 #include "algorithm/naive_bayes/utils.h"
 
 namespace algorithm {
@@ -15,10 +17,9 @@ namespace naive_bayes {
 
 class BayesEstimation : public learner::LearnerBase {
  public:
-  BayesEstimation(const NormalFeatureList& feature_list, const NormalLabelList& label_list,
-                  int num_dim, int num_class, double lamda = kLamda);
+  BayesEstimation(const learner::LearnerOptions& options);
 
-  const std::string Name() const override { return "BayesEstimation"; }
+  const std::string Name() const override { return kBayesEstimationName; }
 
   NormalLabel Predict(const NormalFeature& feature) const override;
 
@@ -27,7 +28,6 @@ class BayesEstimation : public learner::LearnerBase {
   const int num_class_;
   const int num_data_;
   const double lamda_;
-  static constexpr double kLamda = 1.0;
   // key : y, value : frequency
   std::unordered_map<NormalLabel, int> type_frequency_;
   // key : y, value : probability
