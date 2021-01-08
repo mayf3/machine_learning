@@ -16,6 +16,9 @@ struct LearnerOptions {
   int num_class = 0;
   // Learning rate
   double learning_rate = 0.0;
+
+  // Only for BayesEstimation
+  double baye_estimation_lamda = 1.0;
 };
 
 }  // namespace learner

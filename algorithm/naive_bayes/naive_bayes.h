@@ -7,6 +7,8 @@
 #include <vector>
 
 #include "algorithm/learner/learner_base.h"
+#include "algorithm/learner/learner_name.h"
+#include "algorithm/learner/learner_options.h"
 #include "algorithm/naive_bayes/utils.h"
 
 namespace algorithm {
@@ -14,10 +16,9 @@ namespace naive_bayes {
 
 class NaiveBayes : public learner::LearnerBase {
  public:
-  NaiveBayes(const NormalFeatureList& feature_list, const NormalLabelList& label_list, int num_dim,
-             int num_class);
+  NaiveBayes(const learner::LearnerOptions& options);
 
-  const std::string Name() const override { return "NaiveBayes"; }
+  const std::string Name() const override { return kNaiveBayesName; }
 
   NormalLabel Predict(const NormalFeature& feature) const override;
 

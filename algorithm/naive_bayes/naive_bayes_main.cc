@@ -1,10 +1,15 @@
 // Copyright @2021 mayf3
 
-#include "algorithm/naive_bayes/naive_bayes.h"
+#include "algorithm/learner/learner_factory.h"
 #include "algorithm/naive_bayes/bayes_estimation.h"
+#include "algorithm/naive_bayes/naive_bayes.h"
 #include "utils/data/data_utils.h"
 
-using NormalFeatureListAndLabelList = algorithm::learner::LearnerBase::NormalFeatureListAndLabelList;
+using NormalFeatureListAndLabelList =
+    algorithm::learner::LearnerBase::NormalFeatureListAndLabelList;
+using LearnerOptions = algorithm::learner::LearnerOptions;
+using LearnerBase = algorithm::learner::LearnerBase;
+using LearnerFactory = algorithm::learner::LearnerFactory;
 
 int main(int argc, char** argv) {
   // TODO(mayf3) Use google command line to parse argc and argv.
@@ -24,12 +29,13 @@ int main(int argc, char** argv) {
                                            &testing_data);
 
   assert(training_data.feature_list.size() > 0);
-  std::unique_ptr<algorithm::learner::LearnerBase> learner(
-      new algorithm::naive_bayes::NaiveBayes(training_data.feature_list, training_data.label_list,
-                                         training_data.feature_list[0].size(), 2));
-  // std::unique_ptr<algorithm::learner::LearnerBase> learner(
-  //     new algorithm::naive_bayes::BayesEstimation(training_data.feature_list, training_data.label_list,
-  //                                        training_data.feature_list[0].size(), 2));
+  LearnerOptions learner_options;
+  learner_options.normal_feature_list = training_data.feature_list;
+  learner_options.normal_label_list = training_data.label_list;
+  learner_options.num_dim = learner_options.normal_feature_list[0].size();
+  learner_options.num_class = 2;
+  // std::unique_ptr<LearnerBase> learner = LearnerFactory::GetInstance()->Create(kNaiveBayesName, learner_options);
+  std::unique_ptr<LearnerBase> learner = LearnerFactory::GetInstance()->Create(kBayesEstimationName, learner_options);
 
   int correct_times = 0;
   for (int i = 0; i < testing_data.feature_list.size(); i++) {
