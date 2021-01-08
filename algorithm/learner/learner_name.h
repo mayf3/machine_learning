@@ -10,3 +10,7 @@ constexpr char kKnnFastName[] = "KnnFast";
 constexpr char kPerceptronName[] = "Perceptron";
 constexpr char kPerceptronAllName[] = "PerceptronAll";
 constexpr char kPerceptronDualName[] = "PerceptronDual";
+
+// Bayes
+constexpr char kNaiveBayesName[] = "NaiveBayes";
+constexpr char kBayesEstimationName[] = "BayesEstimation";
