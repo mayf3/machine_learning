@@ -5,10 +5,14 @@
 
 #include "algorithm/knn/knn_brute_force.h"
 #include "algorithm/knn/knn_fast.h"
+#include "algorithm/learner/learner_factory.h"
 #include "utils/data/data_utils.h"
 #include "utils/string/string_utils.h"
 
 using NormalFeatureListAndLabelList = algorithm::knn::KnnInterface::NormalFeatureListAndLabelList;
+using LearnerOptions = algorithm::learner::LearnerOptions;
+using LearnerBase = algorithm::learner::LearnerBase;
+using LearnerFactory = algorithm::learner::LearnerFactory;
 
 int main(int argc, char** argv) {
   // TODO(mayf3) Use google command line to parse argc and argv.
@@ -28,15 +32,19 @@ int main(int argc, char** argv) {
                                            &testing_data);
 
   assert(training_data.feature_list.size() > 0);
-  // algorithm::knn::KnnBruteForce knn_instance(
-  //     training_data.feature_list, training_data.label_list,
-  //     training_data.feature_list[0].size());
-  algorithm::knn::KnnFast knn_instance(training_data.feature_list, training_data.label_list,
-                                       training_data.feature_list[0].size());
+
+  LearnerOptions learner_options;
+  learner_options.normal_feature_list = training_data.feature_list;
+  learner_options.normal_label_list = training_data.label_list;
+  learner_options.num_dim = learner_options.normal_feature_list[0].size();
+  // std::unique_ptr<LearnerBase> learner =
+  // LearnerFactory::GetInstance()->Create(kKnnBruteForceName, learner_options);
+  std::unique_ptr<LearnerBase> learner =
+      LearnerFactory::GetInstance()->Create(kKnnFastName, learner_options);
 
   int correct_times = 0;
   for (int i = 0; i < testing_data.feature_list.size(); i++) {
-    if (knn_instance.Predict(testing_data.feature_list[i]) == testing_data.label_list[i]) {
+    if (learner->Predict(testing_data.feature_list[i]) == testing_data.label_list[i]) {
       correct_times++;
     }
   }

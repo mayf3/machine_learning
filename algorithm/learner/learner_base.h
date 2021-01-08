@@ -6,25 +6,40 @@
 #include <string>
 #include <vector>
 
-#include "utils/common/define.h"
-
 namespace algorithm {
 namespace learner {
 
 class LearnerBase {
  public:
-  LearnerBase() = default;
-  virtual ~LearnerBase() = default;
+  template <typename Type>
+  using Feature = std::vector<Type>;
+
+  template <typename Feature>
+  using FeatureList = std::vector<Feature>;
+
+  template <typename Type>
+  using Label = Type;
+
+  template <typename Label>
+  using LabelList = std::vector<Label>;
+
+  template <typename Feature, typename Label>
+  struct FeatureListAndLabelList {
+    FeatureList<Feature> feature_list;
+    LabelList<Label> label_list;
+  };
 
   // Normal Data :
   // - Feature : vecotr<double>
   // - Label : int
-  using NormalFeature = std::vector<double>;
-  using NormalFeatureList = std::vector<NormalFeature>;
-  using NormalLabel = int;
-  using NormalLabelList = std::vector<NormalLabel>;
-  using NormalFeatureListAndLabelList =
-      utils::common::FeatureListAndLabelList<NormalFeature, NormalLabel>;
+  using NormalFeature = Feature<double>;
+  using NormalFeatureList = FeatureList<NormalFeature>;
+  using NormalLabel = Label<int>;
+  using NormalLabelList = LabelList<NormalLabel>;
+  using NormalFeatureListAndLabelList = FeatureListAndLabelList<NormalFeature, NormalLabel>;
+
+  LearnerBase() = default;
+  virtual ~LearnerBase() = default;
 
   virtual const std::string Name() const = 0;
 

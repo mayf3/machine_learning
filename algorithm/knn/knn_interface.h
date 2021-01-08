@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "algorithm/learner/learner_base.h"
+#include "algorithm/learner/learner_options.h"
 
 namespace algorithm {
 namespace knn {
@@ -25,14 +26,14 @@ class KnnInterface : public learner::LearnerBase {
     }
   };
 
-  KnnInterface(const NormalFeatureList& feature_list, const NormalLabelList& label_list, int dim)
+  KnnInterface(const learner::LearnerOptions& options)
       : LearnerBase(),
-        feature_list_(feature_list),
-        label_list_(label_list),
+        feature_list_(options.normal_feature_list),
+        label_list_(options.normal_label_list),
         point_size_(feature_list_.size()),
-        point_dim_(dim) {
+        point_dim_(options.num_dim) {
     assert(feature_list_.size() == label_list_.size());
-    for (const NormalFeature& feature : feature_list) {
+    for (const NormalFeature& feature : feature_list_) {
       assert(feature.size() == dim);
     }
   }

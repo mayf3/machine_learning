@@ -3,8 +3,7 @@
 #pragma once
 
 #include <cmath>
-
-#include "utils/common/define.h"
+#include <algorithm>
 
 namespace utils {
 namespace math {

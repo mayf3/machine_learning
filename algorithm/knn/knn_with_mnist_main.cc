@@ -7,6 +7,7 @@
 
 #include "algorithm/knn/knn_brute_force.h"
 #include "algorithm/knn/knn_fast.h"
+#include "algorithm/learner/learner_factory.h"
 #include "utils/data/data_utils.h"
 #include "utils/data/mnist_data_parser.h"
 #include "utils/string/string_utils.h"
@@ -15,6 +16,9 @@
 using NormalFeature = algorithm::knn::KnnInterface::NormalFeature;
 using NormalFeatureList = algorithm::knn::KnnInterface::NormalFeatureList;
 using NormalFeatureListAndLabelList = algorithm::knn::KnnInterface::NormalFeatureListAndLabelList;
+using LearnerOptions = algorithm::learner::LearnerOptions;
+using LearnerBase = algorithm::learner::LearnerBase;
+using LearnerFactory = algorithm::learner::LearnerFactory;
 
 NormalFeatureList Parse(const std::vector<utils::data::MnistDataParser::Matrix>& image) {
   NormalFeatureList feature_list;
@@ -48,16 +52,19 @@ int main(int argc, char** argv) {
 
   assert(training_data.feature_list.size() > 0);
 
-  // algorithm::knn::KnnBruteForce knn_instance(
-  //     training_data.feature_list, training_data.label_list,
-  //     training_data.feature_list[0].size());
-  algorithm::knn::KnnFast knn_instance(training_data.feature_list, training_data.label_list,
-                                       training_data.feature_list[0].size());
+  LearnerOptions learner_options;
+  learner_options.normal_feature_list = training_data.feature_list;
+  learner_options.normal_label_list = training_data.label_list;
+  learner_options.num_dim = learner_options.normal_feature_list[0].size();
+  const std::string learner_name = kKnnBruteForceName;
+  // const std::string learner_name = kKnnFastName;
+  std::unique_ptr<LearnerBase> learner =
+      LearnerFactory::GetInstance()->Create(learner_name, learner_options);
 
   int correct_times = 0;
   std::unique_ptr<utils::time::StopWatch> stop_watch(new utils::time::StopWatch("mnist"));
   for (int i = 0; i < testing_data.feature_list.size(); i++) {
-    if (knn_instance.Predict(testing_data.feature_list[i]) == testing_data.label_list[i]) {
+    if (learner->Predict(testing_data.feature_list[i]) == testing_data.label_list[i]) {
       correct_times++;
     }
     if (i % 10 == 0) {
