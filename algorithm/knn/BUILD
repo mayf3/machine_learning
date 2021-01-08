@@ -6,6 +6,9 @@ cc_library(
     hdrs = ["knn_interface.h"],
     deps = [
         "//algorithm/learner:learner_base",
+        "//algorithm/learner:learner_factory",
+        "//algorithm/learner:learner_name",
+        "//algorithm/learner:learner_options",
         "//utils/math:math_utils",
     ],
 )
@@ -18,6 +21,7 @@ cc_library(
         ":knn_interface",
         "//utils/math:math_utils",
     ],
+    alwayslink = True,
 )
 
 cc_library(
@@ -28,6 +32,7 @@ cc_library(
         ":knn_interface",
         "//utils/math:math_utils",
     ],
+    alwayslink = True,
 )
 
 cc_binary(
