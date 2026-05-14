@@ -5,3 +5,9 @@ bazel-bin
 bazel-machine_learning
 bazel-out
 bazel-testlogs
+# Environment files (security)
+.env
+.env.local
+.env.*.local
+.env.production
+.env.development
